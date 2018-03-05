@@ -11,6 +11,7 @@ class Game extends React.Component {
       stepNumber: 0,
       selectedMove: -1,
       xIsNext: true,
+      reverseHistoric: false,
     };
   }
 
@@ -38,28 +39,37 @@ class Game extends React.Component {
     });
   }
 
+  sortHistoric(){
+    this.setState({
+      reverseHistoric: !this.state.reverseHistoric,
+    });
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
+    const reverseHistoric = this.state.reverseHistoric;
+    const sortOrder = reverseHistoric ? 'Newest to Oldest' : 'Oldest to Newest' ;
 
     const moves = history.map((step, move) => {
-      const desc = move ?
-      'Go to move #' + move :
+      const moveNumber = reverseHistoric ? (history.length - move - 1) : move;
+      const desc = moveNumber ?
+      'Go to move #' + moveNumber :
       'Go to game start';
-      if(move === this.state.stepNumber){
+      if(moveNumber === this.state.stepNumber){
         return (
-          <li key={move}>
-            <button onClick={() => this.jumpTo(move)}><b>{desc}</b></button>
-            {findPlayedMove(history, move)}
+          <li key={moveNumber}>
+            <button onClick={() => this.jumpTo(moveNumber)}><b>{desc}</b></button>
+            {findPlayedMove(history, moveNumber)}
           </li>
         );
       }
       else{
         return (
-        <li key={move}>
-        <button onClick={() => this.jumpTo(move)}>{desc}</button>
-        {findPlayedMove(history, move)}
+        <li key={moveNumber}>
+          <button onClick={() => this.jumpTo(moveNumber)}>{desc}</button>
+          {findPlayedMove(history, moveNumber)}
         </li>
         );
       }
@@ -82,7 +92,11 @@ class Game extends React.Component {
       </div>
       <div className="game-info">
       <div>{status}</div>
-      <ol>{moves}</ol>
+      <div>
+        <p>Historic :</p>
+        <button onClick={() => this.sortHistoric()}>Sort: {sortOrder}</button>
+      </div>
+        <ol reversed={reverseHistoric}>{moves}</ol>
       </div>
       </div>
       );
