@@ -48,3 +48,6 @@ ol, ul {
 .game-info {
   margin-left: 20px;
 }
+.square.wining {
+  background: radial-gradient(circle, white 20%, white, #00b8ff 99%);
+}
