@@ -91,8 +91,9 @@ class Game extends React.Component {
   }
 
   render() {
+    const stepNumber = this.state.stepNumber;
     const history = this.state.history;
-    const current = history[this.state.stepNumber];
+    const current = history[stepNumber];
     const winner = this.state.winner;
     const reverseHistoric = this.state.reverseHistoric;
     const sortOrder = reverseHistoric ? 'Newest to Oldest' : 'Oldest to Newest' ;
@@ -124,7 +125,11 @@ class Game extends React.Component {
     let status;
     if (winner) {
       status = 'Winner: ' + winner;
-    } else {
+    }
+    else if(stepNumber == current.squares.length) {
+      status = "It's a draw";
+    }
+    else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
 
